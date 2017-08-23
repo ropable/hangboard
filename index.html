@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Custom hangboard workout timer">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="http://static.dbca.wa.gov.au/static/libs/bulma/0.5.1/css/bulma.min.css">
+    <title>Hangboard Timer</title>
+</head>
+<body>
+<div id="app">
+    <section class="section">
+        <div id="header" class="container">
+            <!--<h1 class="title">Hangboard Workout Timer</h1>-->
+        </div>
+    </section>
+
+    <section class="section">
+        <div id="workout-selector" class="container">
+            <div class="control">
+                <workout-selector></workout-selector>
+                <hr>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div id="workout-active" class="container">
+
+            <div class="workout-controls">
+                <div class="columns">
+                    <div class="column has-text-centered">
+                        <a class="button" v-on:click="startPause()">Start</a>
+                        <a class="button" v-on:click="startPause()">Pause</a>
+                        <a class="button">Reset</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-display">
+                <div class="columns">
+                    <div class="column">
+                        <p class="has-text-centered">{{ remainingDisplay }}</p>
+                    </div>
+                    <div class="column">
+                        <p class="has-text-centered">{{ elapsedDisplay }}</p>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title is-1 has-text-centered">{{ currentAction }}</h1>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title is-2 has-text-centered">{{ leftHand }}</h1>
+                    </div>
+                    <div class="column">
+                        <h1 class="title is-2 has-text-centered">{{ rightHand }}</h1>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h1 class="title is-1 has-text-centered">{{ currentMoveDisplay }}</h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript" src="node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript" src="node_modules/vue-resource/dist/vue-resource.js"></script>
+<script src="/public/main.js"></script>
+</body>
+</html>
