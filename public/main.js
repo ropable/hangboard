@@ -2,24 +2,24 @@ new Vue({
     el: '#app',
     data: {
         activeWorkout: {},
-        totalSeconds: 300,
-        elapsedSeconds: 0,
-        remainingSeconds: 300,
-        currentMoveTotalSeconds: 10,
-        currentMoveSeconds: 10,
-        currentMoveElapsedSeconds: 0,
-        elapsedDisplay: null,
-        remainingDisplay: null,
-        currentMoveDisplay: null,
-        currentAction: 'Get ready...',
-        leftHand: 'Jug',
-        rightHand: 'Jug',
         running: false,
         startTimestamp: null,
         lastStepTimestamp: null,
-        elapsed: null,
-        elapsedCurrent: null,
-        interval: 250,  // milliseconds
+        interval: 200,  // milliseconds
+        //
+        totalSeconds: 300,
+        elapsed: null,  // ms elapsed in the workout
+        elapsedSeconds: 0,  // TODO: could remove this, but it's convenient
+        elapsedDisplay: null,  // A string-rep of elapsedSeconds, e.g. "00:35"
+        remainingDisplay: null,
+        // Current move/hang
+        currentTotalSeconds: 10,
+        currentElapsed: null,
+        currentDisplay: null,
+        //
+        currentAction: 'Get ready...',
+        leftHand: 'Jug',
+        rightHand: 'Jug',
     },
     methods: {
         formatSeconds: function(seconds) {
@@ -31,8 +31,8 @@ new Vue({
         redrawDisplayTime: function() {
             // Function to update the displayed timers, formatted nicely.
             this.elapsedDisplay = this.formatSeconds(this.elapsedSeconds);
-            this.remainingDisplay = this.formatSeconds(this.remainingSeconds);
-            this.currentMoveDisplay = this.formatSeconds(this.currentMoveSeconds);
+            this.remainingDisplay = this.formatSeconds(this.totalSeconds - this.elapsedSeconds);
+            this.currentDisplay = this.formatSeconds(this.currentTotalSeconds - Math.floor(this.currentElapsed / 1000));
         },
         beginWorkout: function() {
             // Function to reset the workout, set a timestamp and call the start function.
@@ -40,9 +40,8 @@ new Vue({
             if (!this.startTimestamp) {
                 this.startTimestamp = new Date();
                 this.elapsed = 0;
-                this.elapsedCurrent = 0;
+                this.currentElapsed = 0;
             }
-            //this.startPause();
         },
         startPause: function() {
             // Invert the running variable, and call step() if required.
@@ -56,10 +55,8 @@ new Vue({
         step: function() {
             // Utility function to accumulate time while the workout is not paused.
             this.elapsed += this.interval;
-            this.elapsedCurrent += this.interval;
             this.elapsedSeconds = Math.floor(this.elapsed / 1000);
-            this.remainingSeconds = this.totalSeconds - this.elapsedSeconds;
-            this.currentMoveSeconds = this.currentMoveTotalSeconds - Math.floor(this.elapsedCurrent / 1000);
+            this.currentElapsed += this.interval;
             this.redrawDisplayTime();
             if (this.running) {
                 setTimeout(this.step, this.interval);
