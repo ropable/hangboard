@@ -19,7 +19,7 @@
     <section class="section">
         <div id="workout-selector" class="container">
             <div class="control">
-                <workout-selector></workout-selector>
+                <workout-selector v-bind:workouts-available="workoutsAvailable" v-on:select-workout="selectWorkout"></workout-selector>
                 <hr>
             </div>
         </div>

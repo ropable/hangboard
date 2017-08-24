@@ -1,6 +1,7 @@
 new Vue({
     el: '#app',
     data: {
+        //selected: null,
         activeWorkout: {},
         running: false,
         startTimestamp: null,
@@ -51,7 +52,9 @@ new Vue({
                 this.step();
             }
         },
-        reset: function() {},
+        reset: function() {
+            // TODO
+        },
         step: function() {
             // Utility function to accumulate time while the workout is not paused.
             this.elapsed += this.interval;
@@ -61,7 +64,10 @@ new Vue({
             if (this.running) {
                 setTimeout(this.step, this.interval);
             }
-        }
+        },
+        selectWorkout: function(value) {
+            console.log(value);
+        },
     },
     mounted: function() {
         this.redrawDisplayTime();
@@ -69,64 +75,76 @@ new Vue({
     },
     components: {
         workoutSelector: {
-            template: `
-                <select id="workout_select">
-                    <option v-for="workout in workoutsAvailable" :value="workout.id">{{ workout.name }}</option>
-                </select>
-            `,
-            computed: {
-                workoutsAvailable: function() {
-                    return [
-                        {
-                            "name": "Jugs and Pockets",
-                            "id": "jugs-and-pockets",
-                            "owner": "app",
-                            "hangs": [
-                                {
-                                    "type": "Hang",
-                                    "left_hand": "Jug",
-                                    "right_hand": "Jug",
-                                    "hang_seconds": 5,
-                                    "rest_seconds": 5
-                                },
-                                {
-                                    "type": "Hang",
-                                    "left_hand": "Jug",
-                                    "right_hand": "Jug",
-                                    "hang_seconds": 10,
-                                    "rest_seconds": 10
-                                }
-                            ]
-                        },
-                        {
-                            "name": "Simple Five",
-                            "id": "simple-five",
-                            "owner": "app",
-                            "hangs": [
-                                {
-                                    "type": "Hang",
-                                    "left_hand": "Jug",
-                                    "right_hand": "Jug",
-                                    "hang_seconds": 5,
-                                    "rest_seconds": 5
-                                },
-                                {
-                                    "type": "Hang",
-                                    "left_hand": "Jug",
-                                    "right_hand": "Jug",
-                                    "hang_seconds": 10,
-                                    "rest_seconds": 10
-                                }
-                            ]
-                        }
-                    ]
+            data: function() {
+                return {
+                    selected: null
                 }
             },
+            props: ['workoutsAvailable'],
+            methods: {
+                selectWorkout: function() {
+                    this.$emit('select-workout', this.selected);
+                },
+            },
+            template: `
+                <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
+                    <option disabled value="">Please select one</option>
+                    <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
+                </select>
+            `,
         //WorkoutSelector,
         // Workout
         // Hang
         // WorkoutEditor
         // HangEditor
         },
-    }
+    },
+    computed: {
+        workoutsAvailable: function() {
+            return [
+                {
+                    "name": "Jugs and Pockets",
+                    "id": "jugs-and-pockets",
+                    "owner": "app",
+                    "hangs": [
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 5
+                        }
+                    ]
+                },
+                {
+                    "name": "Simple Five",
+                    "id": "simple-five",
+                    "owner": "app",
+                    "hangs": [
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Pocket",
+                            "hang_seconds": 5,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 10
+                        }
+                    ]
+                }
+            ]
+        }
+    },
 });
