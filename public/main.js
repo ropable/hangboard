@@ -1,7 +1,6 @@
 new Vue({
     el: '#app',
     data: {
-        //selected: null,
         activeWorkout: {},
         running: false,
         startTimestamp: null,
@@ -78,7 +77,7 @@ new Vue({
             data: function() {
                 return {
                     selected: null
-                }
+                };
             },
             props: ['workoutsAvailable'],
             methods: {
@@ -141,6 +140,34 @@ new Vue({
                             "right_hand": "Jug",
                             "hang_seconds": 10,
                             "rest_seconds": 10
+                        }
+                    ]
+                },
+                {
+                    "name": "3-6-9 Pyramid",
+                    "id": "3-6-9-pyramid",
+                    "owner": "app",
+                    "hangs": [
+                        {
+                            "type": "Hang",
+                            "left_hand": "Sloper",
+                            "right_hand": "Sloper",
+                            "hang_seconds": 3,
+                            "rest_seconds": 3
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Sloper",
+                            "right_hand": "Sloper",
+                            "hang_seconds": 6,
+                            "rest_seconds": 6
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Sloper",
+                            "right_hand": "Sloper",
+                            "hang_seconds": 9,
+                            "rest_seconds": 9
                         }
                     ]
                 }
