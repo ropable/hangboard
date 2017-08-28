@@ -107,18 +107,27 @@ new Vue({
                     selected: null
                 };
             },
-            props: ['workoutsAvailable'],
+            props: ['workoutsAvailable', 'elapsed'],
             methods: {
                 selectWorkout: function() {
                     this.$emit('select-workout', this.selected);
                 },
             },
             template: `
-                <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
+                <select v-model="selected" v-on:change="selectWorkout" id="workout_select" :disabled=isDisabled>
                     <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
                 </select>
             `,
-        //WorkoutSelector,
+            computed: {
+                isDisabled: function() {
+                    if (this.elapsed > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        // WorkoutController
         // Workout
         // Hang
         // WorkoutEditor

@@ -17,14 +17,18 @@
 
             <div class="pure-u-1-2">
                 <form class="pure-form">
-                    <workout-selector v-bind:workouts-available="workoutsAvailable" v-on:select-workout="selectWorkout"></workout-selector>
+                    <workout-selector
+                        v-bind:workouts-available="workoutsAvailable"
+                        v-bind:elapsed="elapsed"
+                        v-on:select-workout="selectWorkout">
+                    </workout-selector>
                 </form>
             </div>
 
             <div class="pure-u-1-1">
-                <a class="pure-button" v-on:click="startPause()">Start</a>
-                <a class="pure-button" v-on:click="startPause()">Pause</a>
-                <a class="pure-button">Reset</a>
+                <a class="pure-button" v-on:click="startPause()" v-if="!running">Start</a>
+                <a class="pure-button" v-on:click="startPause()" v-if="running">Pause</a>
+                <a class="pure-button" v-if="!running">Reset</a>
             </div>
 
             <div class="pure-u-1-2">
