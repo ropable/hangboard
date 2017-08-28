@@ -11,6 +11,7 @@
 <body>
     <div id="app">
         <div id="header" class="pure-g">
+
             <div class="pure-u-1-2">
                 Hangboard Workout Timer
             </div>
@@ -25,36 +26,42 @@
                 </form>
             </div>
 
-            <div class="pure-u-1-1">
-                <a class="pure-button" v-on:click="startPause()" v-if="!running">Start</a>
-                <a class="pure-button" v-on:click="startPause()" v-if="running">Pause</a>
-                <a class="pure-button" v-if="!running">Reset</a>
+            <div class="pure-u-1-1" v-if="!activeWorkoutId">
+                <p>Select a workout above</p>
             </div>
 
-            <div class="pure-u-1-2">
-                <h3>{{ remainingDisplay }}</h3>
-            </div>
+            <div v-if="activeWorkoutId">
+                <div class="pure-u-1-1">
+                    <a class="pure-button" v-on:click="startPause()" v-if="!running">Start</a>
+                    <a class="pure-button" v-on:click="startPause()" v-if="running">Pause</a>
+                    <a class="pure-button" v-if="activeWorkoutId && elapsed > 0 && !running">Reset</a>
+                </div>
 
-            <div class="pure-u-1-2">
-                <h3>{{ elapsedDisplay }}</h3>
-            </div>
+                <div class="pure-u-1-2">
+                    <h3>{{ remainingDisplay }}</h3>
+                </div>
 
-            <div class="pure-u-1-1">
-                <h1>{{ currentAction }}</h1>
-            </div>
+                <div class="pure-u-1-2">
+                    <h3>{{ elapsedDisplay }}</h3>
+                </div>
 
-            <div class="pure-u-1-2">
-                <h1 class="title is-1 has-text-centered">{{ leftHand }}</h1>
-                <h3 class="subtitle has-text-centered">Left hand</h3>
-            </div>
+                <div class="pure-u-1-1">
+                    <h1>{{ currentAction }}</h1>
+                </div>
 
-            <div class="pure-u-1-2">
-                <h1 class="title is-1 has-text-centered">{{ rightHand }}</h1>
-                <h3 class="subtitle has-text-centered">Right hand</h3>
-            </div>
+                <div class="pure-u-1-2">
+                    <h1 class="title is-1 has-text-centered">{{ leftHand }}</h1>
+                    <h3 class="subtitle has-text-centered">Left hand</h3>
+                </div>
 
-            <div class="pure-u-1-1">
-                <h1 class="title is-1 has-text-centered">{{ currentDisplay }}</h1>
+                <div class="pure-u-1-2">
+                    <h1 class="title is-1 has-text-centered">{{ rightHand }}</h1>
+                    <h3 class="subtitle has-text-centered">Right hand</h3>
+                </div>
+
+                <div class="pure-u-1-1">
+                    <h1 class="title is-1 has-text-centered">{{ currentDisplay }}</h1>
+                </div>
             </div>
 
         </div>
