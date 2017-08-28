@@ -36,25 +36,25 @@ new Vue({
             this.remainingDisplay = this.formatSeconds(this.totalSeconds - this.elapsedSeconds);
             this.currentDisplay = this.formatSeconds(this.currentTotalSeconds - Math.floor(this.currentElapsed / 1000));
         },
-        beginWorkout: function() {
-            // Function to reset the workout, set a timestamp and call the start function.
-            // TODO: set up the activeWorkout object and set the display.
-            if (!this.startTimestamp) {
-                this.startTimestamp = new Date();
-                this.elapsed = 0;
-                this.currentElapsed = 0;
-            }
-        },
         startPause: function() {
             // Invert the running variable, and call step() if required.
             this.running = !this.running;
             if (this.running) {
+                if (!this.startTimestamp) {
+                    this.startTimestamp = new Date();
+                }
                 // Call the step function
                 this.step();
             }
         },
         reset: function() {
-            // TODO
+            this.elapsed = 0;
+            this.elapsedSeconds = 0;
+            this.currentElapsed = 0;
+            this.startTimestamp = null;
+            // Reset the display to the first hang.
+            this.insertHang();
+            this.redrawDisplayTime();
         },
         step: function() {
             // Utility function to accumulate time while the workout is not paused.
@@ -80,9 +80,7 @@ new Vue({
                 this.totalSeconds += this.activeWorkout.hangs[i].hang_seconds;
                 this.totalSeconds += this.activeWorkout.hangs[i].rest_seconds;
             }
-            // Reset the display to the first hang.
-            this.insertHang();
-            this.redrawDisplayTime();
+            this.reset();
         },
         insertHang: function() {
             // Function to take the next hang off the activeWorkout and
@@ -97,8 +95,7 @@ new Vue({
         },
     },
     mounted: function() {
-        this.redrawDisplayTime();
-        this.beginWorkout();
+        this.reset();
     },
     components: {
         workoutSelector: {
