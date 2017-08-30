@@ -9,19 +9,21 @@ new Vue({
         activeWorkoutId: null,
         activeWorkout: null,
         totalSeconds: 300,
-        elapsed: null,  // ms elapsed in the workout
+        elapsed: 0,  // ms elapsed in the workout
         elapsedSeconds: 0,  // TODO: could remove this, but it's convenient
         elapsedDisplay: null,  // A string-rep of elapsedSeconds, e.g. "00:35"
         remainingDisplay: null,
+        countIn: false,  // Set if the workout is counting in.
+        countInTime: 5000,  // Length of the count-in period (ms).
         // Current hang
         currentHang: null,
         currentTotalSeconds: 10,
         currentElapsed: null,
         currentDisplay: null,
-        currentState: null,  // 'work' or 'rest'
-        currentAction: 'Get ready...',
-        leftHand: 'Jug',
-        rightHand: 'Jug',
+        currentState: null,  // 'hang','rest' or 'count-in'
+        currentAction: null,
+        leftHand: null,
+        rightHand: null,
     },
     methods: {
         formatSeconds: function(seconds) {
@@ -32,20 +34,31 @@ new Vue({
         },
         redrawDisplayTime: function() {
             // Function to update the displayed timers, formatted nicely.
-            this.elapsedDisplay = this.formatSeconds(this.elapsedSeconds);
-            this.remainingDisplay = this.formatSeconds(this.totalSeconds - this.elapsedSeconds);
-            this.currentDisplay = this.formatSeconds(this.currentTotalSeconds - Math.floor(this.currentElapsed / 1000));
+            if (this.currentState == 'count-in') {
+                this.currentDisplay = this.formatSeconds(Math.floor(this.countInTime / 1000));
+            } else {
+                this.elapsedDisplay = this.formatSeconds(this.elapsedSeconds);
+                this.remainingDisplay = this.formatSeconds(this.totalSeconds - this.elapsedSeconds);
+                this.currentDisplay = this.formatSeconds(this.currentTotalSeconds - Math.floor(this.currentElapsed / 1000));
+            }
         },
         startPause: function() {
-            let el = document.getElementById("workout_select");
+            let el = document.getElementById('workout_select');
             if (el) {
                 el.selectedIndex = -1;
             }
-            // Invert the running variable, and call step() if required.
+            // Invert the running variable, and call step() or stepCountin() as required.
             this.running = !this.running;
             if (this.running) {
-                if (!this.startTimestamp) {
-                    this.startTimestamp = new Date();
+                // If we haven't finished the count in, do that first.
+                if (this.countInTime > 0) {
+                    this.countIn = true;
+                    this.currentState = 'count-in';
+                    this.currentAction = 'Get ready...';
+                } else {
+                    if (!this.startTimestamp) {
+                        this.startTimestamp = new Date();
+                    }
                 }
                 // Call the step function
                 this.step();
@@ -64,10 +77,23 @@ new Vue({
         },
         step: function() {
             // Utility function to accumulate time while the workout is not paused.
-            this.elapsed += this.interval;
-            this.elapsedSeconds = Math.floor(this.elapsed / 1000);
-            this.currentElapsed += this.interval;
+            if (this.currentState == 'count-in') {  // Count-in period
+                if (this.countInTime > 0) {
+                    this.countInTime -= this.interval;
+                }
+            } else {  // Hang/rest
+                this.elapsed += this.interval;
+                this.elapsedSeconds = Math.floor(this.elapsed / 1000);
+                this.currentElapsed += this.interval;
+            }
+            // End the count-in period.
+            if (this.countInTime <= 0) {
+                this.currentState = 'hang';
+                this.currentAction = this.currentHang.type;
+            }
+            // Refresh the display.
             this.redrawDisplayTime();
+            // Not paused or inactive - schedule the step function to repeat.
             if (this.running) {
                 setTimeout(this.step, this.interval);
             }
@@ -94,7 +120,7 @@ new Vue({
             this.currentHang = this.activeWorkout.hangs.shift();
             this.currentTotalSeconds = this.currentHang.hang_seconds + this.currentHang.rest_seconds;
             this.currentElapsed = 0;
-            this.currentState = 'work';  // New hang begins as work.
+            this.currentState = 'hang';
             this.currentAction = this.currentHang.type;
             this.leftHand = this.currentHang.left_hand;
             this.rightHand = this.currentHang.right_hand;
