@@ -22,25 +22,24 @@
                     <workout-selector
                         v-bind:workouts-available="workoutsAvailable"
                         v-bind:elapsed="elapsed"
-                        v-on:select-workout="selectWorkout"
-                        :disabled="selectDisabled">
+                        v-on:select-workout="selectWorkout">
                     </workout-selector>
                 </form>
             </div>
 
             <div v-if="workoutId">
                 <div class="pure-u-1-1">
-                    <a class="pure-button" v-on:click="startPause()" v-if="!running">Start</a>
-                    <a class="pure-button" v-on:click="startPause()" v-if="running">Pause</a>
+                    <a class="pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</a>
+                    <a class="pure-button" v-on:click="pause()" v-if="running">Pause</a>
                     <a class="pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</a>
                 </div>
 
                 <div class="pure-u-1-2">
-                    <h3>{{ remainingDisplay }}</h3>
+                    <h1>{{ remainingDisplay }}</h1>
                 </div>
 
                 <div class="pure-u-1-2">
-                    <h3>{{ elapsedDisplay }}</h3>
+                    <h1>{{ elapsedDisplay }}</h1>
                 </div>
 
                 <div class="pure-u-1-1">
@@ -48,29 +47,35 @@
                 </div>
 
                 <div class="pure-u-1-2">
+                    <h4 class="subtitle has-text-centered">Left hand</h4>
                     <h1 class="title is-1 has-text-centered">{{ leftHand }}</h1>
-                    <h3 class="subtitle has-text-centered">Left hand</h3>
                 </div>
 
                 <div class="pure-u-1-2">
+                    <h4 class="subtitle has-text-centered">Right hand</h4>
                     <h1 class="title is-1 has-text-centered">{{ rightHand }}</h1>
-                    <h3 class="subtitle has-text-centered">Right hand</h3>
                 </div>
 
                 <div class="pure-u-1-1">
                     <h1 class="title is-1 has-text-centered">{{ currentTimeDisplay }}</h1>
                 </div>
-                <div class="pure-u-1-2">
-                    <h1>Get ready...</h1>
+
+                <div v-if="workoutState == 'count-in'">
+                    <div class="pure-u-1-2">
+                        <h1>Get ready...</h1>
+                    </div>
+                    <div class="pure-u-1-2">
+                        <h1>{{ countInTimeDisplay }}</h1>
+                    </div>
                 </div>
-                <div class="pure-u-1-2">
-                    <h1>{{ countInTimeDisplay }}</h1>
-                </div>
-                <div class="pure-u-1-2">
-                    <h1>Rest</h1>
-                </div>
-                <div class="pure-u-1-2">
-                    <h1>{{ restTimeDisplay }}</h1>
+
+                <div v-if="workoutState == 'rest'">
+                    <div class="pure-u-1-2">
+                        <h1>Rest</h1>
+                    </div>
+                    <div class="pure-u-1-2">
+                        <h1>{{ restTimeDisplay }}</h1>
+                    </div>
                 </div>
             </div>
             <div v-else>

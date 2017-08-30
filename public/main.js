@@ -1,12 +1,12 @@
 new Vue({
     el: '#app',
     data: {
-        interval: 200,  // milliseconds
+        interval: 1000,  // milliseconds
         // Workout
         workoutId: null,
         workout: null,
         workoutSeconds: null,
-        workoutState: null,  // 'hang','rest' or 'count-in'
+        workoutState: null,  // 'hang','rest','count-in','complete'
         running: false,  // Defines if the workout is active or paused.
         elapsed: 0,  // Time elapsed in the workout (ms).
         elapsedDisplay: null,  // A string-rep of elapsedSeconds, e.g. "00:35"
@@ -16,6 +16,7 @@ new Vue({
         countInTimeDisplay: null,
         // Hang
         currentHang: null,
+        currentHangIndex: 0,
         currentAction: null,
         leftHand: null,
         rightHand: null,
@@ -32,35 +33,28 @@ new Vue({
             d.setSeconds(seconds);
             return d.toISOString().substr(14,5);
         },
-        redrawDisplayTime: function() {
-            // Function to update the displayed timers, formatted nicely.
-            if (this.workoutState == 'count-in') {
-                this.currentTimeDisplay = this.formatSeconds(Math.floor(this.countInTime / 1000));
-            } else {
-                this.elapsedDisplay = this.formatSeconds(Math.floor(this.elapsed / 1000));
-                this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.floor(this.elapsed / 1000));
-                this.currentTimeDisplay = this.formatSeconds(Math.floor(this.currentTime / 1000));
-                this.restTimeDisplay = this.formatSeconds(Math.floor(this.restTime / 1000));
-            }
+        redrawDisplay: function() {
+            this.elapsedDisplay = this.formatSeconds(Math.floor(this.elapsed / 1000));
+            this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.floor(this.elapsed / 1000));
+            this.currentTimeDisplay = this.formatSeconds(Math.floor(this.currentTime / 1000));
+            this.restTimeDisplay = this.formatSeconds(Math.floor(this.restTime / 1000));
+            this.countInTimeDisplay = this.formatSeconds(Math.floor(this.countInTime / 1000));
         },
-        startPause: function() {
+        start: function() {
+            // Disable the workout selector.
             let el = document.getElementById('workout_select');
             if (el) {
                 el.selectedIndex = -1;
+                el.disabled = true;
             }
-            // Invert the running variable, and call step() or stepCountin() as required.
-            this.running = !this.running;
-            if (this.running) {
-                // If we haven't finished the count in, do that first.
-                if (this.countInTime > 0) {
-                    this.workoutState = 'count-in';
-                    this.currentAction = 'Get ready...';
-                }
-                // Call the step function
-                this.step();
-            }
+            this.running = true;
+            this.step();
+        },
+        pause: function() {
+            this.running = false;
         },
         reset: function() {
+            document.getElementById('workout_select').disabled = false;
             this.elapsed = 0;
             this.countInTime = 5000;
             // Reset the display to the first hang.
@@ -71,52 +65,45 @@ new Vue({
                 this.workoutSeconds += this.workout.hangs[i].hang_seconds;
                 this.workoutSeconds += this.workout.hangs[i].rest_seconds;
             }
+            // Workout initial state is always 'count-in'.
+            this.workoutState = 'count-in';
             this.insertHang();
-            this.redrawDisplayTime();
+            this.redrawDisplay();
         },
         step: function() {
-            // Utility function to accumulate time while the workout is not paused.
-            if (this.workoutState == 'count-in') {  // Count-in period
-                if (this.countInTime > 0) {
+            if (this.workoutState == 'count-in') {
+                if (this.countInTime <= 0) {  // Count-in finished.
+                    this.workoutState = 'hang';
+                } else {
                     this.countInTime -= this.interval;
                 }
-            }
-            // End the count-in period if required.
-            if (this.workoutState == 'count-in' && this.countInTime <= 0 && this.elapsed == 0) {
-                console.log('COUNT IN ENDED');
-                this.workoutState = 'hang';
-                this.currentAction = this.currentHang.type;
-            }
-            // If the rest has completed, insert the next hang.
-            if (this.workoutState == 'rest' && this.restTime <= 0) {
-                if (this.workout.hangs.length > 0) {
-                    console.log('REST FINISHED - HANG');
-                    this.workoutState = 'hang';
-                    this.insertHang();
-                } else {  // No more hangs.
-                    console.log('COMPLETED');
-                    this.running = false;
-                    // TODO: proper completion.
+            } else if (this.workoutState == 'hang') {
+                if (this.currentTime <= 0) { // Hang finished.
+                    this.workoutState = 'rest';
+                } else {
+                    this.currentTime -= this.interval;
+                    this.elapsed += this.interval;
+                }
+            } else {  // Rest
+                if (this.restTime <= 0) {  // Rest finished.
+                    this.currentHangIndex += 1;
+                    console.log(this.currentHangIndex);
+                    console.log(this.workout.hangs.length);
+                    if (this.workout.hangs.length > this.currentHangIndex) {
+                        this.workoutState = 'hang';
+                        this.insertHang();
+                    } else {  // No more hangs.
+                        this.running = false;
+                        this.workoutState = 'complete';
+                        // TODO: proper completion.
+                    }
+                } else {
+                    this.restTime -= this.interval;
+                    this.elapsed += this.interval;
                 }
             }
-            // If we're still resting, decrement the rest timer.
-            if (this.workoutState == 'rest' && this.restTime > 0) {
-                console.log('RESTING');
-                this.restTime -= this.interval;
-            }
-            // If the hang has completed, insert the next one and change to resting state.
-            if (this.workoutState == 'hang' && ((this.currentElapsed / 1000) >= this.currentTotalSeconds)) {
-                console.log('HANG FINISHED - REST');
-                this.workoutState = 'rest';
-                this.insertHang();
-            }
-            if (this.workoutState == 'hang' && this) {
-                this.elapsed += this.interval;
-            }
             // Increment time and refresh the display.
-            this.elapsed += this.interval;
-            this.redrawDisplayTime();
-            // Not paused or inactive - schedule the step function to repeat.
+            this.redrawDisplay();
             if (this.running) {
                 setTimeout(this.step, this.interval);
             }
@@ -133,24 +120,12 @@ new Vue({
         insertHang: function() {
             // Function to take the next hang off the workout and
             // insert it into the current hang vars.
-            this.currentHang = this.workout.hangs.shift();
+            this.currentHang = this.workout.hangs[this.currentHangIndex];
             this.currentTime = this.currentHang.hang_seconds * 1000;
             this.currentAction = this.currentHang.type;
             this.leftHand = this.currentHang.left_hand;
             this.rightHand = this.currentHang.right_hand;
             this.restTime = this.currentHang.rest_seconds * 1000;
-        },
-        resting: function() {
-            if (this.workoutState == 'rest') {
-                return true;
-            }
-            return false;
-        },
-        selectDisabled: function() {
-            if (this.workoutState) {
-                return true;
-            }
-            return false;
         }
     },
     components: {
@@ -167,7 +142,7 @@ new Vue({
                 },
             },
             template: `
-                <select v-if="elapsed == 0" v-model="selected" v-on:change="selectWorkout" id="workout_select">
+                <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
                     <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
                 </select>
             `,
