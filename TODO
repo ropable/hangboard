@@ -1,6 +1,8 @@
 [*] Avoid showing uncompiled VueJS app on load
-[ ] Count-in timer
-[ ] Hang-rest transition
-[ ] Hang-hang transition
+[*] Count-in timer
+[*] Hang-rest transition
+[*] Hang-hang transition
+[ ] Completion notification
+[ ] Styling/CSS
 [ ] Social auth mechanism
 [ ] Workout editor

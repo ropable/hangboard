@@ -86,10 +86,28 @@ new Vue({
                 this.elapsedSeconds = Math.floor(this.elapsed / 1000);
                 this.currentElapsed += this.interval;
             }
-            // End the count-in period.
-            if (this.countInTime <= 0) {
+            // End the count-in period, if required.
+            if (this.countInTime <= 0 && this.elapsed == 0) {
                 this.currentState = 'hang';
                 this.currentAction = this.currentHang.type;
+            }
+            // If the hang has completed, move to the rest phase.
+            if (this.currentState == 'hang' && ((this.currentElapsed / 1000) >= this.currentTotalSeconds)) {
+                this.currentState = 'rest';
+                this.currentAction = 'Rest';
+                this.leftHand = null;
+                this.rightHand = null;
+                this.currentTotalSeconds = this.currentHang.rest_seconds;
+                this.currentElapsed = 0;
+            }
+            // If the rest has completed, insert the next hang.
+            if (this.currentState == 'rest' && ((this.currentElapsed / 1000) >= this.currentTotalSeconds)) {
+                if (this.activeWorkout.hangs.length > 0) {
+                    this.insertHang();
+                } else {  // No more hangs.
+                    this.running = false;
+                    // TODO: proper completion.
+                }
             }
             // Refresh the display.
             this.redrawDisplayTime();
@@ -118,7 +136,7 @@ new Vue({
             // Function to take the next hang off the activeWorkout and
             // insert it into the current hang vars.
             this.currentHang = this.activeWorkout.hangs.shift();
-            this.currentTotalSeconds = this.currentHang.hang_seconds + this.currentHang.rest_seconds;
+            this.currentTotalSeconds = this.currentHang.hang_seconds;
             this.currentElapsed = 0;
             this.currentState = 'hang';
             this.currentAction = this.currentHang.type;
