@@ -1,3 +1,4 @@
+[*] Avoid showing uncompiled VueJS app on load
 [ ] Count-in timer
 [ ] Hang-rest transition
 [ ] Hang-hang transition

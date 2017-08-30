@@ -7,7 +7,7 @@ new Vue({
         interval: 200,  // milliseconds
         //
         activeWorkoutId: null,
-        activeWorkout: {},
+        activeWorkout: null,
         totalSeconds: 300,
         elapsed: null,  // ms elapsed in the workout
         elapsedSeconds: 0,  // TODO: could remove this, but it's convenient
@@ -37,6 +37,10 @@ new Vue({
             this.currentDisplay = this.formatSeconds(this.currentTotalSeconds - Math.floor(this.currentElapsed / 1000));
         },
         startPause: function() {
+            let el = document.getElementById("workout_select");
+            if (el) {
+                el.selectedIndex = -1;
+            }
             // Invert the running variable, and call step() if required.
             this.running = !this.running;
             if (this.running) {
@@ -53,7 +57,9 @@ new Vue({
             this.currentElapsed = 0;
             this.startTimestamp = null;
             // Reset the display to the first hang.
-            this.insertHang();
+            if (this.activeWorkout) {
+                this.insertHang();
+            }
             this.redrawDisplayTime();
         },
         step: function() {
@@ -111,25 +117,16 @@ new Vue({
                 },
             },
             template: `
-                <select v-model="selected" v-on:change="selectWorkout" id="workout_select" :disabled=isDisabled>
+                <select v-if="elapsed == 0" v-model="selected" v-on:change="selectWorkout" id="workout_select">
                     <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
                 </select>
             `,
-            computed: {
-                isDisabled: function() {
-                    if (this.elapsed > 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        // WorkoutController
+        },
+        // WorkoutControl
         // Workout
         // Hang
         // WorkoutEditor
         // HangEditor
-        },
     },
     computed: {
         workoutsAvailable: function() {
