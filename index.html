@@ -22,16 +22,17 @@
                     <workout-selector
                         v-bind:workouts-available="workoutsAvailable"
                         v-bind:elapsed="elapsed"
-                        v-on:select-workout="selectWorkout">
+                        v-on:select-workout="selectWorkout"
+                        :disabled="selectDisabled">
                     </workout-selector>
                 </form>
             </div>
 
-            <div v-if="activeWorkoutId">
+            <div v-if="workoutId">
                 <div class="pure-u-1-1">
                     <a class="pure-button" v-on:click="startPause()" v-if="!running">Start</a>
                     <a class="pure-button" v-on:click="startPause()" v-if="running">Pause</a>
-                    <a class="pure-button" v-on:click="reset()" v-if="activeWorkoutId && elapsed > 0 && !running">Reset</a>
+                    <a class="pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</a>
                 </div>
 
                 <div class="pure-u-1-2">
@@ -57,7 +58,19 @@
                 </div>
 
                 <div class="pure-u-1-1">
-                    <h1 class="title is-1 has-text-centered">{{ currentDisplay }}</h1>
+                    <h1 class="title is-1 has-text-centered">{{ currentTimeDisplay }}</h1>
+                </div>
+                <div class="pure-u-1-2">
+                    <h1>Get ready...</h1>
+                </div>
+                <div class="pure-u-1-2">
+                    <h1>{{ countInTimeDisplay }}</h1>
+                </div>
+                <div class="pure-u-1-2">
+                    <h1>Rest</h1>
+                </div>
+                <div class="pure-u-1-2">
+                    <h1>{{ restTimeDisplay }}</h1>
                 </div>
             </div>
             <div v-else>
