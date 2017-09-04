@@ -87,8 +87,6 @@ new Vue({
             } else {  // Rest
                 if (this.restTime <= 0) {  // Rest finished.
                     this.currentHangIndex += 1;
-                    console.log(this.currentHangIndex);
-                    console.log(this.workout.hangs.length);
                     if (this.workout.hangs.length > this.currentHangIndex) {
                         this.workoutState = 'hang';
                         this.insertHang();
@@ -193,7 +191,63 @@ new Vue({
                             "type": "Hang",
                             "left_hand": "Jug",
                             "right_hand": "Jug",
+                            "hang_seconds": 5,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
                             "hang_seconds": 10,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "2 Pull-ups",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 5,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 10
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 10
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "3-finger pocket",
+                            "hang_seconds": 5,
+                            "rest_seconds": 5
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "3-finger pocket",
+                            "right_hand": "Jug",
+                            "hang_seconds": 5,
+                            "rest_seconds": 10
+                        },
+                        {
+                            "type": "Hang",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 10,
+                            "rest_seconds": 10
+                        },
+                        {
+                            "type": "2 Pull-ups",
+                            "left_hand": "Jug",
+                            "right_hand": "Jug",
+                            "hang_seconds": 5,
                             "rest_seconds": 10
                         }
                     ]
