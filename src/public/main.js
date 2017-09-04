@@ -29,7 +29,7 @@ new Vue({
   methods: {
     formatSeconds: function (seconds) {
       // `seconds` will be an integer that will never exceed 3600.
-      d = new Date(null)
+      let d = new Date(null)
       d.setSeconds(seconds)
       return d.toISOString().substr(14, 5)
     },
@@ -71,13 +71,13 @@ new Vue({
       this.redrawDisplay()
     },
     step: function () {
-      if (this.workoutState == 'count-in') {
+      if (this.workoutState === 'count-in') {
         if (this.countInTime <= 0) { // Count-in finished.
           this.workoutState = 'hang'
         } else {
           this.countInTime -= this.interval
         }
-      } else if (this.workoutState == 'hang') {
+      } else if (this.workoutState === 'hang') {
         if (this.currentTime <= 0) { // Hang finished.
           this.workoutState = 'rest'
         } else {
