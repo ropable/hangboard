@@ -36,10 +36,12 @@
 
                 <div class="pure-u-1-2">
                     <h1>{{ remainingDisplay }}</h1>
+                    <p>Remaining</p>
                 </div>
 
                 <div class="pure-u-1-2">
                     <h1>{{ elapsedDisplay }}</h1>
+                    <p>Elapsed</p>
                 </div>
 
                 <div class="pure-u-1-1">
@@ -47,17 +49,17 @@
                 </div>
 
                 <div class="pure-u-1-2">
-                    <h4 class="subtitle has-text-centered">Left hand</h4>
-                    <h1 class="title is-1 has-text-centered">{{ leftHand }}</h1>
+                    <h1>{{ leftHand }}</h1>
+                    <p>Left hand</p>
                 </div>
 
                 <div class="pure-u-1-2">
-                    <h4 class="subtitle has-text-centered">Right hand</h4>
-                    <h1 class="title is-1 has-text-centered">{{ rightHand }}</h1>
+                    <h1>{{ rightHand }}</h1>
+                    <p>Right hand</p>
                 </div>
 
                 <div class="pure-u-1-1">
-                    <h1 class="title is-1 has-text-centered">{{ currentTimeDisplay }}</h1>
+                    <h1>{{ currentTimeDisplay }}</h1>
                 </div>
 
                 <div v-if="workoutState == 'count-in'">
@@ -75,6 +77,11 @@
                     </div>
                     <div class="pure-u-1-2">
                         <h1>{{ restTimeDisplay }}</h1>
+                    </div>
+                </div>
+                <div v-if="workoutState == 'complete'">
+                    <div class="pure-u-1-1">
+                        <h1>Finished!</h1>
                     </div>
                 </div>
             </div>
