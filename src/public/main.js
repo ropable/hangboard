@@ -1,3 +1,5 @@
+/* global Vue */
+
 new Vue({
   el: '#app',
   data: {
@@ -42,10 +44,9 @@ new Vue({
     },
     start: function () {
       // Disable the workout selector.
-      let el = document.getElementById('workout_select')
-      if (el) {
-        el.selectedIndex = -1
-        el.disabled = true
+      document.getElementById('workout_select').disabled = true
+      if (!this.workoutState) { // Assume null
+        this.workoutState = 'count-in'
       }
       this.running = true
       this.step()
@@ -54,19 +55,20 @@ new Vue({
       this.running = false
     },
     reset: function () {
+      // Function to reset the display after a workout is selected, or if the reset button is pressed.
       document.getElementById('workout_select').disabled = false
-      this.elapsed = 0
-      this.countInTime = 5000
-      // Reset the display to the first hang.
       this.workout = this.workoutsAvailable.find(this.matchWorkout)
       // Calculate the total length of the workout.
       this.workoutSeconds = 0
-      for (let i = 0; i < this.workout.hangs.length; i++) {
+      for (let i = 0, len = this.workout.hangs.length; i < len; i++) {
         this.workoutSeconds += this.workout.hangs[i].hang_seconds
         this.workoutSeconds += this.workout.hangs[i].rest_seconds
       }
-      // Workout initial state is always 'count-in'.
-      this.workoutState = 'count-in'
+      this.workoutState = null
+      this.elapsed = 0
+      this.countInTime = 5000
+      this.currentHang = null
+      this.currentHangIndex = 0
       this.insertHang()
       this.redrawDisplay()
     },
@@ -93,7 +95,7 @@ new Vue({
           } else { // No more hangs.
             this.running = false
             this.workoutState = 'complete'
-            // TODO: proper completion.
+            document.getElementById('workout_select').disabled = false
           }
         } else {
           this.restTime -= this.interval
@@ -140,10 +142,11 @@ new Vue({
         }
       },
       template: `
-                <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
-                    <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
-                </select>
-            `
+        <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
+          <option value disabled selected>Select a workout</option>
+          <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
+        </select>
+      `
     }
     // WorkoutControl
     // Workout
