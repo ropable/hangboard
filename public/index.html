@@ -13,16 +13,18 @@
     <div v-cloak id="app">
 
         <div id="headerMenu" class="header">
-            <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+            <div class="home-menu pure-menu pure-menu-horizontal">
                 <a class="pure-menu-heading" href="">Hangboard Workout Timer</a>
-                <form class="pure-form">
-                    <workout-selector
-                        v-bind:workouts-available="workoutsAvailable"
-                        v-bind:elapsed="elapsed"
-                        v-on:select-workout="selectWorkout">
-                    </workout-selector>
-                </form>
                 <ul class="pure-menu-list">
+                    <li class="pure-menu-item">
+                        <form class="pure-form">
+                            <workout-selector
+                                v-bind:workouts-available="workoutsAvailable"
+                                v-bind:elapsed="elapsed"
+                                v-on:select-workout="selectWorkout">
+                            </workout-selector>
+                        </form>
+                    </li>
                     <li class="pure-menu-item"><a href="#" class="pure-menu-link">Log in</a></li>
                 </ul>
             </div>
