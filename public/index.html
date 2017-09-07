@@ -11,13 +11,10 @@
 
 <body>
     <div v-cloak id="app">
-        <div id="header" class="pure-g">
 
-            <div class="pure-u-1-2">
-                Hangboard Workout Timer
-            </div>
-
-            <div class="pure-u-1-2">
+        <div id="headerMenu" class="header">
+            <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+                <a class="pure-menu-heading" href="">Hangboard Workout Timer</a>
                 <form class="pure-form">
                     <workout-selector
                         v-bind:workouts-available="workoutsAvailable"
@@ -25,74 +22,81 @@
                         v-on:select-workout="selectWorkout">
                     </workout-selector>
                 </form>
+                <ul class="pure-menu-list">
+                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Log in</a></li>
+                </ul>
             </div>
+        </div><!-- /#headerMenu -->
 
-            <div v-if="workoutId">
-                <div class="pure-u-1-1">
-                    <a class="pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</a>
-                    <a class="pure-button" v-on:click="pause()" v-if="running">Pause</a>
-                    <a class="pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</a>
-                </div>
-
-                <div class="pure-u-1-2">
-                    <h1>{{ remainingDisplay }}</h1>
-                    <p>Remaining</p>
-                </div>
-
-                <div class="pure-u-1-2">
-                    <h1>{{ elapsedDisplay }}</h1>
-                    <p>Elapsed</p>
-                </div>
-
-                <div class="pure-u-1-1">
-                    <h1>{{ currentAction }}</h1>
-                </div>
-
-                <div class="pure-u-1-2">
-                    <h1>{{ leftHand }}</h1>
-                    <p>Left hand</p>
-                </div>
-
-                <div class="pure-u-1-2">
-                    <h1>{{ rightHand }}</h1>
-                    <p>Right hand</p>
-                </div>
-
-                <div class="pure-u-1-1">
-                    <h1>{{ currentTimeDisplay }}</h1>
-                </div>
-
-                <div v-if="workoutState == 'count-in'">
-                    <div class="pure-u-1-2">
-                        <h1>Get ready...</h1>
-                    </div>
-                    <div class="pure-u-1-2">
-                        <h1>{{ countInTimeDisplay }}</h1>
-                    </div>
-                </div>
-
-                <div v-if="workoutState == 'rest'">
-                    <div class="pure-u-1-2">
-                        <h1>Rest</h1>
-                    </div>
-                    <div class="pure-u-1-2">
-                        <h1>{{ restTimeDisplay }}</h1>
-                    </div>
-                </div>
-                <div v-if="workoutState == 'complete'">
+        <div id="workout" class="workoutRegion">
+            <div class="pure-g">
+                <div v-if="workoutId">
                     <div class="pure-u-1-1">
-                        <h1>Finished!</h1>
+                        <a class="pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</a>
+                        <a class="pure-button" v-on:click="pause()" v-if="running">Pause</a>
+                        <a class="pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</a>
+                    </div>
+
+                    <div class="pure-u-1-2 workoutTime">
+                        <h1 class="timeHead">{{ remainingDisplay }}</h1>
+                        <p class="timeSubhead">Remaining</p>
+                    </div>
+
+                    <div class="pure-u-1-2 workoutTime">
+                        <h1 class="timeHead">{{ elapsedDisplay }}</h1>
+                        <p class="timeSubhead">Elapsed</p>
+                    </div>
+
+                    <div class="pure-u-1-1">
+                        <h1>{{ currentAction }}</h1>
+                    </div>
+
+                    <div class="pure-u-1-2">
+                        <h1>{{ leftHand }}</h1>
+                        <p>Left hand</p>
+                    </div>
+
+                    <div class="pure-u-1-2">
+                        <h1>{{ rightHand }}</h1>
+                        <p>Right hand</p>
+                    </div>
+
+                    <div class="pure-u-1-1 workoutTime">
+                        <h1>{{ currentTimeDisplay }}</h1>
+                    </div>
+
+                    <div v-if="workoutState == 'count-in'">
+                        <div class="pure-u-1-2">
+                            <h1>Get ready...</h1>
+                        </div>
+                        <div class="pure-u-1-2">
+                            <h1>{{ countInTimeDisplay }}</h1>
+                        </div>
+                    </div>
+
+                    <div v-if="workoutState == 'rest'">
+                        <div class="pure-u-1-2">
+                            <h1>Rest</h1>
+                        </div>
+                        <div class="pure-u-1-2">
+                            <h1>{{ restTimeDisplay }}</h1>
+                        </div>
+                    </div>
+                    <div v-if="workoutState == 'complete'">
+                        <div class="pure-u-1-1">
+                            <h1>Finished!</h1>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div v-else>
-                <div class="pure-u-1-1">
-                    <p>Select a workout above</p>
+                <div v-else>
+                    <div class="pure-u-1-1">
+                        <p>Select a workout above</p>
+                    </div>
                 </div>
-            </div>
+            </div><!-- /.pure-g -->
+        </div><!-- /#workout -->
 
-        </div>
-    </div>
+    </div><!-- /#app -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
     <script type="text/javascript" src="./app.js"></script>
 </body>

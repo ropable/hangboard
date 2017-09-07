@@ -1,3 +1,55 @@
 [v-cloak] {
     display: none;
 }
+/*
+ * HEADER MENU STYLES
+ */
+.home-menu {
+    padding: 0.5em;
+    box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
+    background: #2d3e50;
+}
+.pure-menu .pure-menu-fixed {
+    border-bottom: none;
+    z-index: 4;
+}
+.home-menu .pure-menu-heading {
+    color: white;
+    font-weight: 400;
+    font-size: 120%;
+}
+.home-menu .pure-menu-selected a {
+    color: white;
+}
+.home-menu a {
+    color: #6FBEF3;
+}
+.home-menu li a:hover,
+.home-menu li a:focus {
+    background: none;
+    border: none;
+    color: #AECFE5;
+}
+/*
+ * WORKOUT REGION STYLES
+ */
+.workoutRegion {
+    padding-top: 126px;
+    max-width: 768px;
+    text-align: center;
+}
+.workoutTime {
+    background: #1f8dd6;
+}
+div.workoutTime h1 {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+h1.timeHead {
+    margin-bottom: 0.1em;
+}
+p.timeSubhead {
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+    margin-top: 0.1em;
+}
