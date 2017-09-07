@@ -34,9 +34,11 @@
             <div class="pure-g">
                 <div v-if="workoutId">
                     <div class="pure-u-1-1">
-                        <a class="pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</a>
-                        <a class="pure-button" v-on:click="pause()" v-if="running">Pause</a>
-                        <a class="pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</a>
+                        <div class="workoutControls">
+                            <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
+                            <button class="button-xlarge pure-button" v-on:click="pause()" v-if="running">Pause</button>
+                            <button class="button-xlarge pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</button>
+                        </div>
                     </div>
 
                     <div class="pure-u-1-2 workoutTime">
@@ -54,20 +56,21 @@
                     </div>
 
                     <div class="pure-u-1-2">
-                        <h1>{{ leftHand }}</h1>
-                        <p>Left hand</p>
+                        <h1 class="handHead">{{ leftHand }}</h1>
+                        <p class="handSubhead">Left hand</p>
                     </div>
 
                     <div class="pure-u-1-2">
-                        <h1>{{ rightHand }}</h1>
-                        <p>Right hand</p>
+                        <h1 class="handHead">{{ rightHand }}</h1>
+                        <p class="handSubhead">Right hand</p>
                     </div>
 
                     <div class="pure-u-1-1 workoutTime">
                         <h1>{{ currentTimeDisplay }}</h1>
                     </div>
 
-                    <div v-if="workoutState == 'count-in'">
+                    <transition name="fade">
+                    <div v-if="workoutState == 'count-in'" class="countIn">
                         <div class="pure-u-1-2">
                             <h1>Get ready...</h1>
                         </div>
@@ -75,8 +78,10 @@
                             <h1>{{ countInTimeDisplay }}</h1>
                         </div>
                     </div>
+                    </transition>
 
-                    <div v-if="workoutState == 'rest'">
+                    <transition name="fade">
+                    <div v-if="workoutState == 'rest'" class="rest">
                         <div class="pure-u-1-2">
                             <h1>Rest</h1>
                         </div>
@@ -84,11 +89,15 @@
                             <h1>{{ restTimeDisplay }}</h1>
                         </div>
                     </div>
+                    </transition>
+
+                    <transition name="fade">
                     <div v-if="workoutState == 'complete'">
                         <div class="pure-u-1-1">
                             <h1>Finished!</h1>
                         </div>
                     </div>
+                    </transition>
                 </div>
                 <div v-else>
                     <div class="pure-u-1-1">

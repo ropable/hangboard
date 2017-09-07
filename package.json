@@ -7,18 +7,17 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon ./server.js --ignore node_modules/ -e js,html,css",
-    "serve": "http-server ./public",
+    "serve": "http-server -c-1 ./public",
     "eslint": "./node_modules/.bin/eslint ./src/public/*.js --fix --cache",
     "webpack": "webpack",
     "build": "eslint ./src/public/*.js --fix --cache && webpack"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
-    "eslint": "^4.6.1",
-    "vue": "^2.4.0",
-    "webpack": "^3.5.5"
+    "vue": "^2.4.0"
   },
   "devDependencies": {
+    "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
@@ -26,6 +25,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "http-server": "^0.10.0",
     "nodemon": "^1.11.0",
+    "webpack": "^3.5.5",
     "reload": "^1.1.0"
   }
 }
