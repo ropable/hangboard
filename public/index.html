@@ -23,7 +23,7 @@
             </div>
         </div><!-- /#headerMenu -->
 
-        <div id="workout" class="workoutRegion">
+        <div id="workout" class="workout-region">
             <div class="pure-g">
                 <div class="pure-u-1-1">
                     <div id="workout-selector">
@@ -35,52 +35,52 @@
                             </workout-selector>
                         </form>
                     </div>
-                    <start-pause-control></start-pause-control>
                 </div>
 
                     <div class="pure-u-1-1">
-                        <div class="workoutControls">
+                        <div class="workout-controls">
+                            <start-pause-control></start-pause-control>
                             <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
                             <button class="button-xlarge pure-button" v-on:click="pause()" v-if="running">Pause</button>
                             <button class="button-xlarge pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</button>
                         </div>
                     </div>
 
-                    <div class="pure-u-1-2 workoutTime">
-                        <h1 class="timeHead">{{ remainingDisplay }}</h1>
-                        <p class="timeSubhead">Remaining</p>
+                    <div v-if="workoutId" class="pure-u-1-2 workout-time">
+                        <h1 class="time-head">{{ remainingDisplay }}</h1>
+                        <p class="time-subhead">Remaining</p>
                     </div>
 
-                    <div class="pure-u-1-2 workoutTime">
-                        <h1 class="timeHead">{{ elapsedDisplay }}</h1>
-                        <p class="timeSubhead">Elapsed</p>
+                    <div v-if="workoutId" class="pure-u-1-2 workout-time">
+                        <h1 class="time-head">{{ elapsedDisplay }}</h1>
+                        <p class="time-subhead">Elapsed</p>
                     </div>
 
-                    <div class="pure-u-1-1">
-                        <h1>{{ currentAction }}</h1>
+                    <div v-if="workoutId" class="pure-u-1-1">
+                        <h1 v-bind:class="{muted: stateNotHang}">{{ currentAction }}</h1>
                     </div>
 
-                    <div class="pure-u-1-2">
-                        <h1 class="handHead">{{ leftHand }}</h1>
-                        <p class="handSubhead">Left hand</p>
+                    <div v-if="workoutId" class="pure-u-1-2">
+                        <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ leftHand }}</h1>
+                        <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Left hand</p>
                     </div>
 
-                    <div class="pure-u-1-2">
-                        <h1 class="handHead">{{ rightHand }}</h1>
-                        <p class="handSubhead">Right hand</p>
+                    <div v-if="workoutId" class="pure-u-1-2">
+                        <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ rightHand }}</h1>
+                        <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Right hand</p>
                     </div>
 
-                    <div class="pure-u-1-1 workoutTime">
+                    <div v-if="workoutId" class="pure-u-1-1 workout-time">
                         <h1>{{ currentTimeDisplay }}</h1>
                     </div>
 
                     <transition name="fade">
-                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 countIn">
+                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
                         <h1>Get ready...</h1>
                     </div>
                     </transition>
                     <transition name="fade">
-                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 countIn">
+                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
                         <h1>{{ countInTimeDisplay }}</h1>
                     </div>
                     </transition>

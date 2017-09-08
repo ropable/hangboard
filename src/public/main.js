@@ -9,6 +9,7 @@ new Vue({
     workout: null,
     workoutSeconds: null,
     workoutState: null, // 'hang','rest','count-in','complete'
+    stateNotHang: true, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
     elapsedDisplay: null, // A string-rep of elapsedSeconds, e.g. "00:35"
@@ -47,6 +48,7 @@ new Vue({
       document.getElementById('workout_select').disabled = true
       if (!this.workoutState) { // Assume null
         this.workoutState = 'count-in'
+        this.stateNotHang = true
       }
       this.running = true
       this.step()
@@ -65,6 +67,7 @@ new Vue({
         this.workoutSeconds += this.workout.hangs[i].rest_seconds
       }
       this.workoutState = null
+      this.stateNotHang = true
       this.elapsed = 0
       this.countInTime = 5000
       this.currentHang = null
@@ -76,12 +79,14 @@ new Vue({
       if (this.workoutState === 'count-in') {
         if (this.countInTime <= 0) { // Count-in finished.
           this.workoutState = 'hang'
+          this.stateNotHang = false
         } else {
           this.countInTime -= this.interval
         }
       } else if (this.workoutState === 'hang') {
         if (this.currentTime <= 0) { // Hang finished.
           this.workoutState = 'rest'
+          this.stateNotHang = true
         } else {
           this.currentTime -= this.interval
           this.elapsed += this.interval
@@ -91,10 +96,12 @@ new Vue({
           this.currentHangIndex += 1
           if (this.workout.hangs.length > this.currentHangIndex) {
             this.workoutState = 'hang'
+            this.stateNotHang = false
             this.insertHang()
           } else { // No more hangs.
             this.running = false
             this.workoutState = 'complete'
+            this.stateNotHang = true
             document.getElementById('workout_select').disabled = false
           }
         } else {
@@ -130,11 +137,6 @@ new Vue({
   },
   components: {
     workoutSelector: {
-      data: function () {
-        return {
-          selected: null
-        }
-      },
       props: ['workoutsAvailable', 'elapsed'],
       methods: {
         selectWorkout: function () {

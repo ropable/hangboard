@@ -1,10 +1,13 @@
+/*
+ * VUE STYLES
+ */
 [v-cloak] {
     display: none;
 }
 .fade-enter-active, .fade-leave-active {
 	transition: opacity .5s
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to {
 	opacity: 0
 }
 /*
@@ -32,35 +35,35 @@ a.header-menu-link {
     margin: 0 auto;
     max-width: 768px;
 }
-.workoutRegion {
+.workout-region {
     text-align: center;
 }
-div.workoutControls {
+div.workout-controls {
     margin: .67em 0;
 }
-.workoutTime {
+.workout-time {
     background: #1f8dd6;
 }
-div.workoutTime h1 {
+div.workout-time h1 {
     color: white !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 }
-h1.timeHead {
+h1.time-head {
     margin-bottom: 0.1em;
 }
-p.timeSubhead {
+p.time-subhead {
     color: white !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
     margin-top: 0.1em;
 }
-h1.handHead {
+h1.hand-head {
 	margin-top: 0.1em;
     margin-bottom: 0.1em;
 }
-p.handSubhead {
+p.hand-subhead {
     margin-top: 0.1em;
 }
-.countIn {
+.count-in {
 	background: rgb(223, 117, 20);
 }
 .rest {
@@ -68,4 +71,7 @@ p.handSubhead {
 }
 .button-xlarge {
 	font-size: 125%;
+}
+.muted {
+    color: #b3b3b3;
 }
