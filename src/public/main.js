@@ -147,6 +147,20 @@ new Vue({
           <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
         </select>
       `
+    },
+    startPauseControl: {
+      props: ['running', 'workoutState'],
+      methods: {
+        startPause: function () {
+          if (this.running) {
+            this.$emit('control', 'pause')
+          } else {
+            this.$emit('control', 'start')
+          }
+        }
+      },
+      template: '<button class="button-xlarge pure-button" v-on:click="startPause" id="button-start-pause">Start/pause</button>'
+      //  <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
     }
     // WorkoutControl
     // Workout
