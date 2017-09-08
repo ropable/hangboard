@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon ./server.js --ignore node_modules/ -e js,html,css",
-    "serve": "http-server -c-1 ./public",
+    "serve": "http-server -c-1 -p 8399 ./public",
     "eslint": "./node_modules/.bin/eslint ./src/public/*.js --fix --cache",
     "webpack": "webpack",
     "build": "eslint ./src/public/*.js --fix --cache && webpack"
