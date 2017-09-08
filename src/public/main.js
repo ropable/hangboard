@@ -9,7 +9,7 @@ new Vue({
     workout: null,
     workoutSeconds: null,
     workoutState: null, // 'hang','rest','count-in','complete'
-    stateNotHang: true, // true or false (used for class bindings)
+    stateNotHang: true,  // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
     elapsedDisplay: null, // A string-rep of elapsedSeconds, e.g. "00:35"
@@ -42,6 +42,21 @@ new Vue({
       this.currentTimeDisplay = this.formatSeconds(Math.floor(this.currentTime / 1000))
       this.restTimeDisplay = this.formatSeconds(Math.floor(this.restTime / 1000))
       this.countInTimeDisplay = this.formatSeconds(Math.floor(this.countInTime / 1000))
+    },
+    startPause: function (value) {
+      // Invoked by the Start/Pause button click event.
+      if (value === 'start') {
+        // Disable the workout selector.
+        document.getElementById('workout_select').disabled = true
+        if (!this.workoutState) { // Assume null
+          this.workoutState = 'count-in'
+          this.stateNotHang = true
+        }
+        this.running = true
+        this.step()
+      } else {
+        this.running = false
+      }
     },
     start: function () {
       // Disable the workout selector.
@@ -137,6 +152,11 @@ new Vue({
   },
   components: {
     workoutSelector: {
+      data: function () {
+        return {
+          selected: null
+        }
+      },
       props: ['workoutsAvailable', 'elapsed'],
       methods: {
         selectWorkout: function () {
@@ -153,7 +173,7 @@ new Vue({
     startPauseControl: {
       props: ['running', 'workoutState'],
       methods: {
-        startPause: function () {
+        startPauseToggle: function () {
           if (this.running) {
             this.$emit('control', 'pause')
           } else {
@@ -161,8 +181,8 @@ new Vue({
           }
         }
       },
-      template: '<button class="button-xlarge pure-button" v-on:click="startPause" id="button-start-pause">Start/pause</button>'
-      //  <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
+      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" id="button-start-pause">Start/pause</button>'
+      //<button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
     }
     // WorkoutControl
     // Workout

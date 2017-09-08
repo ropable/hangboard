@@ -25,6 +25,7 @@
 
         <div id="workout" class="workout-region">
             <div class="pure-g">
+
                 <div class="pure-u-1-1">
                     <div id="workout-selector">
                         <form class="pure-form">
@@ -37,70 +38,72 @@
                     </div>
                 </div>
 
-                    <div class="pure-u-1-1">
-                        <div class="workout-controls">
-                            <start-pause-control></start-pause-control>
-                            <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
-                            <button class="button-xlarge pure-button" v-on:click="pause()" v-if="running">Pause</button>
-                            <button class="button-xlarge pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</button>
-                        </div>
+                <div class="pure-u-1-1">
+                    <div class="workout-controls">
+                        <start-pause-control
+                            v-bind:running="running"
+                            v-bind:workout-state="workoutState"
+                            v-on:control="startPause">
+                        </start-pause-control>
+                        <button class="button-xlarge pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</button>
                     </div>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-2 workout-time">
-                        <h1 class="time-head">{{ remainingDisplay }}</h1>
-                        <p class="time-subhead">Remaining</p>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-2 workout-time">
+                    <h1 class="time-head">{{ remainingDisplay }}</h1>
+                    <p class="time-subhead">Remaining</p>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-2 workout-time">
-                        <h1 class="time-head">{{ elapsedDisplay }}</h1>
-                        <p class="time-subhead">Elapsed</p>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-2 workout-time">
+                    <h1 class="time-head">{{ elapsedDisplay }}</h1>
+                    <p class="time-subhead">Elapsed</p>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-1">
-                        <h1 v-bind:class="{muted: stateNotHang}">{{ currentAction }}</h1>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-1">
+                    <h1 v-bind:class="{muted: stateNotHang}">{{ currentAction }}</h1>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-2">
-                        <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ leftHand }}</h1>
-                        <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Left hand</p>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-2">
+                    <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ leftHand }}</h1>
+                    <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Left hand</p>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-2">
-                        <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ rightHand }}</h1>
-                        <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Right hand</p>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-2">
+                    <h1 class="hand-head" v-bind:class="{muted: stateNotHang}">{{ rightHand }}</h1>
+                    <p class="hand-subhead" v-bind:class="{muted: stateNotHang}">Right hand</p>
+                </div>
 
-                    <div v-if="workoutId" class="pure-u-1-1 workout-time">
-                        <h1>{{ currentTimeDisplay }}</h1>
-                    </div>
+                <div v-if="workoutId" class="pure-u-1-1 workout-time">
+                    <h1>{{ currentTimeDisplay }}</h1>
+                </div>
 
-                    <transition name="fade">
-                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
-                        <h1>Get ready...</h1>
-                    </div>
-                    </transition>
-                    <transition name="fade">
-                    <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
-                        <h1>{{ countInTimeDisplay }}</h1>
-                    </div>
-                    </transition>
+                <transition name="fade">
+                <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
+                    <h1>Get ready...</h1>
+                </div>
+                </transition>
+                <transition name="fade">
+                <div v-if="workoutState == 'count-in'" class="pure-u-1-2 count-in">
+                    <h1>{{ countInTimeDisplay }}</h1>
+                </div>
+                </transition>
 
-                    <transition name="fade">
-                    <div v-if="workoutState == 'rest'" class="pure-u-1-2 rest">
-                        <h1>Rest</h1>
-                    </div>
-                    </transition>
-                    <transition name="fade">
-                    <div v-if="workoutState == 'rest'" class="pure-u-1-2 rest">
-                        <h1>{{ restTimeDisplay }}</h1>
-                    </div>
-                    </transition>
+                <transition name="fade">
+                <div v-if="workoutState == 'rest'" class="pure-u-1-2 rest">
+                    <h1>Rest</h1>
+                </div>
+                </transition>
+                <transition name="fade">
+                <div v-if="workoutState == 'rest'" class="pure-u-1-2 rest">
+                    <h1>{{ restTimeDisplay }}</h1>
+                </div>
+                </transition>
 
-                    <transition name="fade">
-                    <div v-if="workoutState == 'complete'" class="pure-u-1-1">
-                        <h1>Finished!</h1>
-                    </div>
-                    </transition>
+                <transition name="fade">
+                <div v-if="workoutState == 'complete'" class="pure-u-1-1">
+                    <h1>Finished!</h1>
+                </div>
+                </transition>
             </div><!-- /.pure-g -->
         </div><!-- /#workout -->
 
