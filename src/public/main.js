@@ -1,15 +1,15 @@
-/* global Vue */
-
+/* eslint no-undef:0 */
 new Vue({
   el: '#app',
   data: {
-    interval: 1000, // milliseconds
+    interval: 10, // milliseconds
     // Workout
     workoutId: null,
     workout: null,
     workoutSeconds: null,
     workoutState: null, // 'hang','rest','count-in','complete'
     stateNotHang: true, // true or false (used for class bindings)
+    stateHang: false, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
     elapsedDisplay: null, // A string-rep of elapsedSeconds, e.g. "00:35"
@@ -37,11 +37,11 @@ new Vue({
       return d.toISOString().substr(14, 5)
     },
     redrawDisplay: function () {
-      this.elapsedDisplay = this.formatSeconds(Math.floor(this.elapsed / 1000))
-      this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.floor(this.elapsed / 1000))
-      this.currentTimeDisplay = this.formatSeconds(Math.floor(this.currentTime / 1000))
-      this.restTimeDisplay = this.formatSeconds(Math.floor(this.restTime / 1000))
-      this.countInTimeDisplay = this.formatSeconds(Math.floor(this.countInTime / 1000))
+      this.elapsedDisplay = this.formatSeconds(Math.ceil(this.elapsed / 1000))
+      this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.ceil(this.elapsed / 1000))
+      this.currentTimeDisplay = this.formatSeconds(Math.ceil(this.currentTime / 1000))
+      this.restTimeDisplay = this.formatSeconds(Math.ceil(this.restTime / 1000))
+      this.countInTimeDisplay = this.formatSeconds(Math.ceil(this.countInTime / 1000))
     },
     startPause: function (value) {
       // Invoked by the Start/Pause button click event.
@@ -51,6 +51,7 @@ new Vue({
         if (!this.workoutState) { // Assume null
           this.workoutState = 'count-in'
           this.stateNotHang = true
+          this.stateHang = false
         }
         this.running = true
         this.step()
@@ -71,6 +72,7 @@ new Vue({
       this.workoutState = null
       this.running = false
       this.stateNotHang = true
+      this.stateHang = false
       this.elapsed = 0
       this.countInTime = 5000
       this.currentHang = null
@@ -83,6 +85,7 @@ new Vue({
         if (this.countInTime <= 0) { // Count-in finished.
           this.workoutState = 'hang'
           this.stateNotHang = false
+          this.stateHang = true
         } else {
           this.countInTime -= this.interval
         }
@@ -90,21 +93,26 @@ new Vue({
         if (this.currentTime <= 0) { // Hang finished.
           this.workoutState = 'rest'
           this.stateNotHang = true
+          this.stateHang = false
+          this.currentHangIndex += 1
+          if (this.workout.hangs.length > this.currentHangIndex) {
+            this.insertHang() // Insert the next hang
+          }
         } else {
           this.currentTime -= this.interval
           this.elapsed += this.interval
         }
       } else if (this.workoutState === 'rest') {
         if (this.restTime <= 0) { // Rest finished.
-          this.currentHangIndex += 1
           if (this.workout.hangs.length > this.currentHangIndex) {
             this.workoutState = 'hang'
             this.stateNotHang = false
-            this.insertHang()
+            this.stateHang = true
           } else { // No more hangs.
             this.running = false
             this.workoutState = 'complete'
             this.stateNotHang = true
+            this.stateHang = false
             document.getElementById('workout_select').disabled = false
           }
         } else {
@@ -151,7 +159,8 @@ new Vue({
           this.$emit('select-workout', this.selected)
         }
       },
-      template: `<select v-model="selected" v-on:change="selectWorkout" id="workout_select">
+      template: `
+        <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
           <option value disabled selected>Select a workout</option>
           <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
         </select>
@@ -163,7 +172,7 @@ new Vue({
           controlText: 'Start'
         }
       },
-      props: ['running'],
+      props: ['running', 'workoutId'],
       methods: {
         startPauseToggle: function () {
           if (this.running) {
@@ -175,7 +184,7 @@ new Vue({
           }
         }
       },
-      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle">{{ controlText }}</button>'
+      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" v-bind:disabled="!workoutId">{{ controlText }}</button>'
     },
     resetControl: {
       props: ['running', 'elapsed'],

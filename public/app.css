@@ -42,7 +42,7 @@ div.workout-controls {
     margin: .67em 0;
 }
 .workout-time {
-    background: #1f8dd6;
+    background: rgb(26, 94, 140);
 }
 div.workout-time h1 {
     color: white !important;
@@ -72,6 +72,14 @@ p.hand-subhead {
 .button-xlarge {
 	font-size: 125%;
 }
+.emphasis {
+    background: rgb(26, 94, 140);
+}
 .muted {
     color: #b3b3b3;
+}
+h1.big {
+    font-size: 4em;
+	margin-top: 0.2em;
+    margin-bottom: 0.2em;
 }
