@@ -94,7 +94,7 @@ new Vue({
           this.currentTime -= this.interval
           this.elapsed += this.interval
         }
-      } else { // Rest
+      } else if (this.workoutState === 'rest') {
         if (this.restTime <= 0) { // Rest finished.
           this.currentHangIndex += 1
           if (this.workout.hangs.length > this.currentHangIndex) {
@@ -178,13 +178,13 @@ new Vue({
       template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle">{{ controlText }}</button>'
     },
     resetControl: {
-      props: ['running'],
+      props: ['running', 'elapsed'],
       methods: {
         reset: function () {
           this.$emit('control', 'reset')
         }
       },
-      template: '<button class="button-xlarge pure-button" id="button-reset" v-on:click="reset" v-bind:disabled="running">Reset</button>'
+      template: '<button class="button-xlarge pure-button" id="button-reset" v-on:click="reset" v-bind:disabled="running || elapsed == 0">Reset</button>'
     }
     // WorkoutEditor
     // HangEditor

@@ -46,6 +46,7 @@
                         </start-pause-control>
                         <reset-control
                             v-bind:running="running"
+                            v-bind:elapsed="elapsed"
                             v-on:control="reset">
                         </reset-control>
                     </div>
