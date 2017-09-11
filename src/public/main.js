@@ -9,7 +9,7 @@ new Vue({
     workout: null,
     workoutSeconds: null,
     workoutState: null, // 'hang','rest','count-in','complete'
-    stateNotHang: true,  // true or false (used for class bindings)
+    stateNotHang: true, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
     elapsedDisplay: null, // A string-rep of elapsedSeconds, e.g. "00:35"
@@ -182,7 +182,7 @@ new Vue({
         }
       },
       template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" id="button-start-pause">Start/pause</button>'
-      //<button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
+      // <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
     }
     // WorkoutControl
     // Workout

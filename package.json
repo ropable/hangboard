@@ -6,10 +6,8 @@
   "author": "Ashley Felton <ashley@ropable.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon ./server.js --ignore node_modules/ -e js,html,css",
     "serve": "http-server -c-1 -p 8399 ./public",
-    "eslint": "./node_modules/.bin/eslint ./src/public/*.js --fix --cache",
-    "webpack": "webpack",
+    "eslint": "eslint ./src/public/*.js --fix --cache",
     "build": "eslint ./src/public/*.js --fix --cache && webpack"
   },
   "dependencies": {
@@ -17,6 +15,7 @@
     "vue": "^2.4.0"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.6.0",
     "eslint": "^4.6.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
@@ -25,7 +24,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "http-server": "^0.10.0",
     "nodemon": "^1.11.0",
-    "webpack": "^3.5.5",
-    "reload": "^1.1.0"
+    "reload": "^1.1.0",
+    "webpack": "^3.5.5"
   }
 }
