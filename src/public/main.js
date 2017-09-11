@@ -171,17 +171,24 @@ new Vue({
       `
     },
     startPauseControl: {
+      data: function () {
+        return {
+          controlText: 'Start'
+        }
+      },
       props: ['running', 'workoutState'],
       methods: {
         startPauseToggle: function () {
           if (this.running) {
+            this.controlText = 'Start'
             this.$emit('control', 'pause')
           } else {
+            this.controlText = 'Pause'
             this.$emit('control', 'start')
           }
         }
       },
-      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" id="button-start-pause">Start/pause</button>'
+      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" id="button-start-pause">{{ controlText }}</button>'
       // <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
     }
     // WorkoutControl
