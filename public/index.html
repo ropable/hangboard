@@ -42,10 +42,12 @@
                     <div class="workout-controls">
                         <start-pause-control
                             v-bind:running="running"
-                            v-bind:workout-state="workoutState"
                             v-on:control="startPause">
                         </start-pause-control>
-                        <button class="button-xlarge pure-button" v-on:click="reset()" v-if="workoutId && elapsed > 0 && !running">Reset</button>
+                        <reset-control
+                            v-bind:running="running"
+                            v-on:control="reset">
+                        </reset-control>
                     </div>
                 </div>
 

@@ -58,19 +58,6 @@ new Vue({
         this.running = false
       }
     },
-    start: function () {
-      // Disable the workout selector.
-      document.getElementById('workout_select').disabled = true
-      if (!this.workoutState) { // Assume null
-        this.workoutState = 'count-in'
-        this.stateNotHang = true
-      }
-      this.running = true
-      this.step()
-    },
-    pause: function () {
-      this.running = false
-    },
     reset: function () {
       // Function to reset the display after a workout is selected, or if the reset button is pressed.
       document.getElementById('workout_select').disabled = false
@@ -82,6 +69,7 @@ new Vue({
         this.workoutSeconds += this.workout.hangs[i].rest_seconds
       }
       this.workoutState = null
+      this.running = false
       this.stateNotHang = true
       this.elapsed = 0
       this.countInTime = 5000
@@ -163,8 +151,7 @@ new Vue({
           this.$emit('select-workout', this.selected)
         }
       },
-      template: `
-        <select v-model="selected" v-on:change="selectWorkout" id="workout_select">
+      template: `<select v-model="selected" v-on:change="selectWorkout" id="workout_select">
           <option value disabled selected>Select a workout</option>
           <option v-for="workout in workoutsAvailable" v-bind:value="workout.id">{{ workout.name }}</option>
         </select>
@@ -176,7 +163,7 @@ new Vue({
           controlText: 'Start'
         }
       },
-      props: ['running', 'workoutState'],
+      props: ['running'],
       methods: {
         startPauseToggle: function () {
           if (this.running) {
@@ -188,12 +175,17 @@ new Vue({
           }
         }
       },
-      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" id="button-start-pause">{{ controlText }}</button>'
-      // <button class="button-xlarge pure-button" v-on:click="start()" v-if="!running && workoutState != 'complete'">Start</button>
+      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle">{{ controlText }}</button>'
+    },
+    resetControl: {
+      props: ['running'],
+      methods: {
+        reset: function () {
+          this.$emit('control', 'reset')
+        }
+      },
+      template: '<button class="button-xlarge pure-button" id="button-reset" v-on:click="reset" v-bind:disabled="running">Reset</button>'
     }
-    // WorkoutControl
-    // Workout
-    // Hang
     // WorkoutEditor
     // HangEditor
   },
