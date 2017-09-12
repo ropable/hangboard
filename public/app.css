@@ -43,6 +43,9 @@ a.header-menu-link:hover {
 .workout-region {
     text-align: center;
 }
+div.workout-selector {
+    margin-top: .5em;
+}
 div.workout-controls {
     margin: .67em 0;
 }

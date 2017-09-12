@@ -15,7 +15,7 @@
         <div id="headerMenu" class="header">
             <div class="pure-g">
                 <div class="pure-u-1-2">
-                    <h4 class="app-heading">Hangboard Workout Timer</h4>
+                    <h4 class="app-heading">Hangboard Timer</h4>
                 </div>
                 <div class="pure-u-1-2 header-links">
                     <a href="#" class="header-menu-link">Log in</a>
@@ -27,7 +27,7 @@
             <div class="pure-g">
 
                 <div class="pure-u-1-1">
-                    <div id="workout-selector">
+                    <div class="workout-selector">
                         <form class="pure-form">
                             <workout-selector
                                 v-bind:workouts-available="workoutsAvailable"
@@ -83,7 +83,7 @@
 
                 <transition name="fade">
                 <div v-if="workoutState == 'count-in'" class="pure-u-1-2 rest">
-                    <h1>Get ready...</h1>
+                    <h1>Ready...</h1>
                 </div>
                 </transition>
                 <transition name="fade">
