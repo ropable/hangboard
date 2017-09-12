@@ -18,15 +18,20 @@
     box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
     background: #2d3e50;
 }
-.app-heading {
+.app-heading, a.header-menu-link {
     color: white;
+	margin-top: 0.1em;
+    margin-bottom: 0.1em;
 }
 .header-links {
     text-align: right;
 }
 a.header-menu-link {
-    color: #AECFE5;
+    font-weight: bold;
     text-decoration: none;
+}
+a.header-menu-link:hover {
+    text-decoration: underline;
 }
 /*
  * WORKOUT REGION STYLES
@@ -68,6 +73,8 @@ p.hand-subhead {
 }
 .rest {
     background: rgb(28, 184, 65);
+    color: white !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 }
 .button-xlarge {
 	font-size: 125%;
