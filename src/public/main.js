@@ -37,8 +37,9 @@ new Vue({
       return d.toISOString().substr(14, 5)
     },
     redrawDisplay: function () {
-      this.elapsedDisplay = this.formatSeconds(Math.ceil(this.elapsed / 1000))
-      this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.ceil(this.elapsed / 1000))
+      // Update the various times being displayed.
+      this.elapsedDisplay = this.formatSeconds(Math.floor(this.elapsed / 1000))
+      this.remainingDisplay = this.formatSeconds(this.workoutSeconds - Math.floor(this.elapsed / 1000))
       this.currentTimeDisplay = this.formatSeconds(Math.ceil(this.currentTime / 1000))
       this.restTimeDisplay = this.formatSeconds(Math.ceil(this.restTime / 1000))
       this.countInTimeDisplay = this.formatSeconds(Math.ceil(this.countInTime / 1000))
@@ -46,16 +47,9 @@ new Vue({
     startPause: function (value) {
       // Invoked by the Start/Pause button click event.
       if (value === 'start') {
-        // Disable the workout selector.
-        document.getElementById('workout_select').disabled = true
-        if (!this.workoutState) { // Assume null
-          this.workoutState = 'count-in'
-          this.stateNotHang = true
-          this.stateHang = false
-        }
         this.running = true
         this.step()
-      } else {
+      } else { // Pause
         this.running = false
       }
     },
@@ -81,7 +75,14 @@ new Vue({
       this.redrawDisplay()
     },
     step: function () {
-      if (this.workoutState === 'count-in') {
+      // This function determines what state the workout is currently in,
+      // and modifies it if required.
+      if (!this.workoutState) { // null: initiate count-in
+        document.getElementById('workout_select').disabled = true
+        this.workoutState = 'count-in'
+        this.stateNotHang = true
+        this.stateHang = false
+      } else if (this.workoutState === 'count-in') {
         if (this.countInTime <= 0) { // Count-in finished.
           this.workoutState = 'hang'
           this.stateNotHang = false
@@ -111,6 +112,7 @@ new Vue({
             this.stateHang = true
           } else { // No more rests.
             // TODO: add a toast/modal to inform the user of completion.
+            // TODO: possibly implement a compete() function.
             this.running = false
             this.workoutState = 'complete'
             this.stateNotHang = true
