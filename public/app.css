@@ -74,6 +74,7 @@ p.hand-subhead {
 }
 .emphasis {
     background: rgb(26, 94, 140);
+    color: white !important;
 }
 .muted {
     color: #b3b3b3;
