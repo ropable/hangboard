@@ -162,20 +162,22 @@ new Vue({
       `
     },
     startPauseControl: {
-      data: function () {
-        return {
-          controlText: 'Start'
-        }
-      },
-      props: ['running', 'workoutState', 'workoutId'],
+      props: ['running', 'workoutId'],
       methods: {
         startPauseToggle: function () {
-          if (this.workoutState && this.running) {
-            this.controlText = 'Start'
+          if (this.running) {
             this.$emit('control', 'pause')
           } else {
-            this.controlText = 'Pause'
             this.$emit('control', 'start')
+          }
+        }
+      },
+      computed: {
+        controlText: function () {
+          if (this.running) {
+            return 'Pause'
+          } else {
+            return 'Start'
           }
         }
       },
