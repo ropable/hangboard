@@ -7,7 +7,7 @@ new Vue({
     workoutId: null,
     workout: null,
     workoutSeconds: null,
-    workoutState: null, // 'hang','rest','count-in','complete'
+    workoutState: null, // 'hang','rest','count-in','complete','paused'
     stateNotHang: true, // true or false (used for class bindings)
     stateHang: false, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
@@ -31,7 +31,7 @@ new Vue({
   },
   methods: {
     formatSeconds: function (seconds) {
-      // `seconds` will be an integer that will never exceed 3600.
+      // "seconds" will be an integer that will never exceed 3600.
       let d = new Date(null)
       d.setSeconds(seconds)
       return d.toISOString().substr(14, 5)
@@ -77,7 +77,7 @@ new Vue({
       this.countInTime = 5000
       this.currentHang = null
       this.currentHangIndex = 0
-      this.insertHang()
+      this.insertHang(this.currentHangIndex)
       this.redrawDisplay()
     },
     step: function () {
@@ -94,9 +94,10 @@ new Vue({
           this.workoutState = 'rest'
           this.stateNotHang = true
           this.stateHang = false
+          this.insertRest()
           this.currentHangIndex += 1
           if (this.workout.hangs.length > this.currentHangIndex) {
-            this.insertHang() // Insert the next hang
+            this.insertHang(this.currentHangIndex)
           }
         } else {
           this.currentTime -= this.interval
@@ -108,7 +109,8 @@ new Vue({
             this.workoutState = 'hang'
             this.stateNotHang = false
             this.stateHang = true
-          } else { // No more hangs.
+          } else { // No more rests.
+            // TODO: add a toast/modal to inform the user of completion.
             this.running = false
             this.workoutState = 'complete'
             this.stateNotHang = true
@@ -120,7 +122,6 @@ new Vue({
           this.elapsed += this.interval
         }
       }
-      // Increment time and refresh the display.
       this.redrawDisplay()
       if (this.running) {
         setTimeout(this.step, this.interval)
@@ -130,19 +131,17 @@ new Vue({
       return el.id === this.workoutId
     },
     selectWorkout: function (value) {
-      // Invoked once when a workout is selected.
-      // Reset the workout object
       this.workoutId = value
       this.reset()
     },
-    insertHang: function () {
-      // Function to take the next hang off the workout and
-      // insert it into the current hang vars.
-      this.currentHang = this.workout.hangs[this.currentHangIndex]
+    insertHang: function (idx) {
+      this.currentHang = this.workout.hangs[idx]
       this.currentTime = this.currentHang.hang_seconds * 1000
       this.currentAction = this.currentHang.type
       this.leftHand = this.currentHang.left_hand
       this.rightHand = this.currentHang.right_hand
+    },
+    insertRest: function () {
       this.restTime = this.currentHang.rest_seconds * 1000
     }
   },
@@ -184,7 +183,11 @@ new Vue({
           }
         }
       },
-      template: '<button class="button-xlarge pure-button" v-on:click="startPauseToggle" v-bind:disabled="!workoutId">{{ controlText }}</button>'
+      template: `
+        <button class="button-xlarge pure-button" v-on:click="startPauseToggle" v-bind:disabled="!workoutId">
+          {{ controlText }}
+        </button>
+      `
     },
     resetControl: {
       props: ['running', 'elapsed'],
@@ -193,7 +196,11 @@ new Vue({
           this.$emit('control', 'reset')
         }
       },
-      template: '<button class="button-xlarge pure-button" id="button-reset" v-on:click="reset" v-bind:disabled="running || elapsed == 0">Reset</button>'
+      template: `
+        <button class="button-xlarge pure-button" id="button-reset" v-on:click="reset" v-bind:disabled="running || elapsed == 0">
+          Reset
+        </button>
+      `
     }
     // WorkoutEditor
     // HangEditor
