@@ -7,7 +7,7 @@ new Vue({
     workoutId: null,
     workout: null,
     workoutSeconds: null,
-    workoutState: null, // 'hang','rest','count-in','complete','paused'
+    workoutState: null, // 'hang','rest','count-in'
     stateHang: false, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
@@ -110,10 +110,8 @@ new Vue({
           } else { // No more rests.
             // TODO: add a toast/modal to inform the user of completion.
             // TODO: possibly implement a compete() function.
-            this.running = false
-            this.workoutState = 'complete'
-            this.stateHang = false
             document.getElementById('workout_select').disabled = false
+            this.reset()
           }
         } else {
           this.restTime -= this.interval
@@ -169,10 +167,10 @@ new Vue({
           controlText: 'Start'
         }
       },
-      props: ['running', 'workoutId'],
+      props: ['running', 'workoutState', 'workoutId'],
       methods: {
         startPauseToggle: function () {
-          if (this.running) {
+          if (this.workoutState && this.running) {
             this.controlText = 'Start'
             this.$emit('control', 'pause')
           } else {
@@ -329,6 +327,20 @@ new Vue({
               'right_hand': 'Sloper',
               'hang_seconds': 9,
               'rest_seconds': 9
+            }
+          ]
+        },
+        {
+          'name': 'Test',
+          'id': 'test',
+          'owner': 'app',
+          'hangs': [
+            {
+              'type': 'Hang',
+              'left_hand': 'Sloper',
+              'right_hand': 'Sloper',
+              'hang_seconds': 3,
+              'rest_seconds': 3
             }
           ]
         }
