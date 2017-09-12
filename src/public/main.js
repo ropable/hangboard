@@ -8,7 +8,6 @@ new Vue({
     workout: null,
     workoutSeconds: null,
     workoutState: null, // 'hang','rest','count-in','complete','paused'
-    stateNotHang: true, // true or false (used for class bindings)
     stateHang: false, // true or false (used for class bindings)
     running: false, // Defines if the workout is active or paused.
     elapsed: 0, // Time elapsed in the workout (ms).
@@ -44,6 +43,9 @@ new Vue({
       this.restTimeDisplay = this.formatSeconds(Math.ceil(this.restTime / 1000))
       this.countInTimeDisplay = this.formatSeconds(Math.ceil(this.countInTime / 1000))
     },
+    notHanging: function () {
+      return !this.stateHang
+    },
     startPause: function (value) {
       // Invoked by the Start/Pause button click event.
       if (value === 'start') {
@@ -65,7 +67,6 @@ new Vue({
       }
       this.workoutState = null
       this.running = false
-      this.stateNotHang = true
       this.stateHang = false
       this.elapsed = 0
       this.countInTime = 5000
@@ -80,12 +81,10 @@ new Vue({
       if (!this.workoutState) { // null: initiate count-in
         document.getElementById('workout_select').disabled = true
         this.workoutState = 'count-in'
-        this.stateNotHang = true
         this.stateHang = false
       } else if (this.workoutState === 'count-in') {
         if (this.countInTime <= 0) { // Count-in finished.
           this.workoutState = 'hang'
-          this.stateNotHang = false
           this.stateHang = true
         } else {
           this.countInTime -= this.interval
@@ -93,7 +92,6 @@ new Vue({
       } else if (this.workoutState === 'hang') {
         if (this.currentTime <= 0) { // Hang finished.
           this.workoutState = 'rest'
-          this.stateNotHang = true
           this.stateHang = false
           this.insertRest()
           this.currentHangIndex += 1
@@ -108,14 +106,12 @@ new Vue({
         if (this.restTime <= 0) { // Rest finished.
           if (this.workout.hangs.length > this.currentHangIndex) {
             this.workoutState = 'hang'
-            this.stateNotHang = false
             this.stateHang = true
           } else { // No more rests.
             // TODO: add a toast/modal to inform the user of completion.
             // TODO: possibly implement a compete() function.
             this.running = false
             this.workoutState = 'complete'
-            this.stateNotHang = true
             this.stateHang = false
             document.getElementById('workout_select').disabled = false
           }
