@@ -1,9 +1,10 @@
-[*] Avoid showing uncompiled VueJS app on load
-[*] Count-in timer
-[*] Hang-rest transition
-[*] Hang-hang transition
+[X] Avoid showing uncompiled VueJS app on load
+[X] Count-in timer
+[X] Hang-rest transition
+[X] Hang-hang transition
+[X] Styling/CSS
+[X] Workout controls -> components
+[ ] Reorganise project re. vue-cli output
 [ ] Completion notification
-[ ] Styling/CSS
-[ ] Workout controls -> components
 [ ] Social auth mechanism
 [ ] Workout editor
